@@ -57,4 +57,4 @@ jobs:
           version: latest
           args: --snapshot --skip-publish --rm-dist
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_SECRET }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

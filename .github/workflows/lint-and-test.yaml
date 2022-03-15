@@ -27,8 +27,6 @@ jobs:
 
       - name: Run GolangCI-Lint
         uses: golangci/golangci-lint-action@v3
-        with:
-          skip-go-installation: true
 
   test:
     runs-on: ubuntu-latest

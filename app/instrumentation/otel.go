@@ -3,6 +3,7 @@ package instrumentation
 import (
 	"context"
 	"log"
+	"time"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -18,7 +19,8 @@ const serviceName = "mopsos"
 
 // InitInstrumentation initializes the OpenTelemetry instrumentation using the Opentelemetry Collector
 func InitInstrumentation(collectorTarget string) func() {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	conn, err := grpc.DialContext(
 		ctx,

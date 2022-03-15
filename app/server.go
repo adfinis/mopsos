@@ -54,7 +54,7 @@ func (s *Server) Start() {
 	}), "webhook-receiver"))
 
 	logrus.WithField("listener", s.config.HttpListener).Info("Starting server")
-	logrus.Fatal(http.ListenAndServe(":8081", nil))
+	logrus.Fatal(http.ListenAndServe(s.config.HttpListener, nil))
 }
 
 // WithEventChannel sets the event channel for the server

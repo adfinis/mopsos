@@ -60,7 +60,7 @@ You can send telemetry data to an [OpenTelemetry Collector](https://opentelemetr
 | environment variable | default | comment |
 | ---- | ---- | ---- |
 | `MOPSOS_OTEL` | `"false"` | set to `"true"` to enable sending traces to the collector |
-| `MOPSOS_OTEL_COLLECTOR` | `"localhost:30079"` | nneds to point to a grpc otlp receiver |
+| `MOPSOS_OTEL_COLLECTOR` | `"localhost:30079"` | needs to point to a grpc otlp receiver |
 
 ## Development
 

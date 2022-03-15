@@ -80,6 +80,36 @@ go tool cover -html=coverage.out
 These and more tests are also run on each PR as defined in
 [.github/workflows/lint-and-test.yaml](./.github/workflows/lint-and-test.yaml)
 
+### Running
+
+You can start a local instance of Mopsos using go run:
+
+```bash
+go run ./...
+```
+
+Once Mopsos reports that it is running you can send it a sample event using `curl`:
+
+```bash
+cat > event.json <<'EOD'
+{
+    "specversion": "1.0",
+    "type": "cloud.adfinis.mopsos.updateRecord",
+    "datacontenttype": "application/json",
+    "data": {
+        "cluster_name": "kubernetes.svc.cluster.invalid",
+        "application_name": "mopsos",
+        "application_version": "0.0.0"
+    }
+}
+EOD
+
+curl -v \
+     -H 'Content-Type: application/cloudevents+json' \
+     -d '@event.json' \
+     http://localhost:8080/webhook
+```
+
 ### Release Management
 
 The CI/CD setup uses semantic commit messages following the

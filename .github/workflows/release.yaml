@@ -1,3 +1,4 @@
+# releases packages once a version has been tagged
 name: Release App
 
 on:

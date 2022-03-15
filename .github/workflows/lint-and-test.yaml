@@ -1,3 +1,4 @@
+# runs for each pr and is required to succeed
 name: Lint and Test
 
 on:

@@ -22,6 +22,8 @@ Flags:
       --http-listener string    HTTP listener (default ":8080")
       --otel                    Enable OpenTelemetry tracing
       --otel-collector string   Endpoint for OpenTelemetry Collector. On a local cluster the collector should be accessible through a NodePort service at the localhost:30078 endpoint. Otherwise replace localhost with the collector endpoint. (default "localhost:30079")
+      --verbose                 Enable verbose mode
+
 ```
 
 ## Development

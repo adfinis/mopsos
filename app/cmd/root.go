@@ -26,7 +26,11 @@ var rootCmd = &cobra.Command{
 	// Run builds the applications object composition and starts the server
 	Run: func(cmd *cobra.Command, args []string) {
 
-		// check for debug mode early so we can use it from here on out
+		// check logging early so we can use it from here on out
+		verboseMode := cmd.Flag("verbose").Value.String() == "true"
+		if verboseMode {
+			logrus.SetLevel(logrus.InfoLevel)
+		}
 		debugMode := cmd.Flag("debug").Value.String() == "true"
 		if debugMode {
 			logrus.SetLevel(logrus.DebugLevel)
@@ -68,7 +72,7 @@ var rootCmd = &cobra.Command{
 			EnableTracing: enableTracing,
 			TracingTarget: tracingTarget,
 		}
-		log := logrus.WithField("config", cfg)
+		log := logrus.WithField("config", fmt.Sprintf("%+v", cfg))
 
 		if enableTracing {
 			shutdown := instrumentation.InitInstrumentation(cfg.TracingTarget)
@@ -76,7 +80,7 @@ var rootCmd = &cobra.Command{
 		}
 
 		// prepare gorm.io database connection
-		log.Info("Connecting to database")
+		log.Debug("Connecting to database")
 		dbConn, err := db.NewDBConnection(cfg)
 		if err != nil {
 			log.Fatal("Failed to connect to database: ", err)
@@ -103,12 +107,15 @@ func Execute() {
 	// webserver flags
 	rootCmd.Flags().String("http-listener", ":8080", "HTTP listener")
 
+	// otel flags
 	rootCmd.Flags().Bool("otel", false, "Enable OpenTelemetry tracing")
 	rootCmd.Flags().String("otel-collector", "localhost:30079", `Endpoint for OpenTelemetry Collector. `+
 		`On a local cluster the collector should be accessible through a NodePort service at the localhost:30078 `+
 		`endpoint. Otherwise replace localhost with the collector endpoint.`)
 
+	// logging flags
 	rootCmd.Flags().Bool("debug", false, "Enable debug mode")
+	rootCmd.Flags().Bool("verbose", false, "Enable verbose mode")
 
 	if err := rootCmd.Execute(); err != nil {
 		logrus.Fatal(err)

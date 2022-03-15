@@ -1,8 +1,8 @@
 # Mopsos
 
-Receives CloudEvents from Argo CD Notifications and stores them for later analysis.
+Receives [CloudEvents](https://cloudevents.io/) from [Argo CD](https://argoproj.github.io/cd/) [notifications](https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/) and stores them for later analysis.
 
-Mopsos knows what application is installed to which cluster and version it helps see
+Mopsos knows the version of the applications installed in your cluster and helps you see
 what you need to update.
 
 ## Architecture
@@ -52,6 +52,15 @@ helm install adfinis/mopsos
 
 Please refer to the [`mopsos` Helm chart](https://github.com/adfinis-sygroup/helm-charts/tree/master/charts/back8sup)
 for further information.
+
+### Telemetry
+
+You can send telemetry data to an [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/getting-started/) instance.
+
+| environment variable | default | comment |
+| ---- | ---- | ---- |
+| `MOPSOS_OTEL` | `"false"` | set to `"true"` to enable sending traces to the collector |
+| `MOPSOS_OTEL_COLLECTOR` | `"localhost:30079"` | nneds to point to a grpc otlp receiver |
 
 ## Development
 

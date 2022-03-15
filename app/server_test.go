@@ -4,14 +4,15 @@ import (
 	"context"
 	"testing"
 
-	"github.com/adfinis-sygroup/mopsos/app"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	"gorm.io/gorm"
+
+	mopsos "github.com/adfinis-sygroup/mopsos/app"
 )
 
 func Test_ServerHandleReceivedEvent(t *testing.T) {
 	dbMock := &gorm.DB{}
-	a, _ := app.NewApp(&app.Config{
+	a, _ := mopsos.NewApp(&mopsos.Config{
 		HttpListener:  ":8080",
 		EnableTracing: false,
 		TracingTarget: "",
@@ -40,7 +41,7 @@ func Test_ServerHandleReceivedEvent(t *testing.T) {
 
 func Test_ServerWithEventChannel(t *testing.T) {
 	dbMock := &gorm.DB{}
-	a, _ := app.NewApp(&app.Config{
+	a, _ := mopsos.NewApp(&mopsos.Config{
 		HttpListener:  ":8080",
 		EnableTracing: false,
 	}, dbMock)

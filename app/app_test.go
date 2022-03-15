@@ -3,12 +3,13 @@ package app_test
 import (
 	"testing"
 
-	"github.com/adfinis-sygroup/mopsos/app"
 	"gorm.io/gorm"
+
+	mopsos "github.com/adfinis-sygroup/mopsos/app"
 )
 
 func Test_NewAppFailWhenNoDatabase(t *testing.T) {
-	_, err := app.NewApp(&app.Config{
+	_, err := mopsos.NewApp(&mopsos.Config{
 		HttpListener:  ":8080",
 		EnableTracing: false,
 		TracingTarget: ""}, nil)
@@ -18,7 +19,7 @@ func Test_NewAppFailWhenNoDatabase(t *testing.T) {
 }
 func Test_NewApp(t *testing.T) {
 	dbMock := &gorm.DB{}
-	a, _ := app.NewApp(&app.Config{
+	a, _ := mopsos.NewApp(&mopsos.Config{
 		HttpListener:  ":8080",
 		EnableTracing: false,
 		TracingTarget: ""}, dbMock)

@@ -6,16 +6,16 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/adfinis-sygroup/mopsos/app"
-	"github.com/adfinis-sygroup/mopsos/app/db"
-	"github.com/adfinis-sygroup/mopsos/app/models"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/sdk/resource"
-	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
-
 	otelObs "github.com/cloudevents/sdk-go/observability/opentelemetry/v2/client"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
+
+	mopsos "github.com/adfinis-sygroup/mopsos/app"
+	"github.com/adfinis-sygroup/mopsos/app/db"
+	"github.com/adfinis-sygroup/mopsos/app/models"
 )
 
 func eventStub(record *models.Record) cloudevents.Event {
@@ -95,7 +95,7 @@ func Test_Handler_HandleEvent(t *testing.T) {
 				t.Errorf("failed to unmarshal event data: %v", err)
 			}
 
-			gdb, err := db.NewDBConnection(&app.Config{
+			gdb, err := db.NewDBConnection(&mopsos.Config{
 				DBProvider:    "sqlite",
 				DBDSN:         "file::memory:?cache=shared",
 				DBMigrate:     true,
@@ -105,7 +105,7 @@ func Test_Handler_HandleEvent(t *testing.T) {
 				t.Errorf("failed to connect to database: %v", err)
 			}
 
-			h := app.NewHandler(true, gdb)
+			h := mopsos.NewHandler(true, gdb)
 
 			if err := h.HandleEvent(evt); (err != nil) != tt.wantErr {
 				t.Errorf("Handler.HandleEvent() error = %v, wantErr %v", err, tt.wantErr)

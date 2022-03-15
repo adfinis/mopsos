@@ -1,17 +1,18 @@
 package db
 
 import (
-	"github.com/adfinis-sygroup/mopsos/app"
-	"github.com/adfinis-sygroup/mopsos/app/models"
 	gorm_logrus "github.com/onrik/gorm-logrus"
 	"github.com/uptrace/opentelemetry-go-extra/otelgorm"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+
+	mopsos "github.com/adfinis-sygroup/mopsos/app"
+	"github.com/adfinis-sygroup/mopsos/app/models"
 )
 
 // NewDBConnection creates a new database connection for a specific provider
-func NewDBConnection(config *app.Config) (*gorm.DB, error) {
+func NewDBConnection(config *mopsos.Config) (*gorm.DB, error) {
 	var dialector gorm.Dialector
 
 	switch config.DBProvider {

@@ -3,11 +3,12 @@ package app
 import (
 	"context"
 
-	"github.com/adfinis-sygroup/mopsos/app/models"
 	otelObs "github.com/cloudevents/sdk-go/observability/opentelemetry/v2/client"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+
+	"github.com/adfinis-sygroup/mopsos/app/models"
 )
 
 type Handler struct {

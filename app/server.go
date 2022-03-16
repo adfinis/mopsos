@@ -10,6 +10,7 @@ import (
 	"github.com/cloudevents/sdk-go/v2/binding"
 	"github.com/cloudevents/sdk-go/v2/protocol"
 	httproto "github.com/cloudevents/sdk-go/v2/protocol/http"
+	http_logrus "github.com/improbable-eng/go-httpwares/logging/logrus"
 	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
@@ -30,14 +31,15 @@ func NewServer(cfg *Config) *Server {
 
 // Start starts the server and listens for incoming events
 func (s *Server) Start() {
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		// an example API handler
 		err := json.NewEncoder(w).Encode(map[string]bool{"ok": true})
 		if err != nil {
 			logrus.WithError(err).Error("error encoding response")
 		}
 	})
-	http.Handle("/webhook", otelhttp.NewHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	mux.Handle("/webhook", otelhttp.NewHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		// get event
 		message := httproto.NewMessageFromHttpRequest(r)
@@ -51,10 +53,15 @@ func (s *Server) Start() {
 			logrus.WithError(err).Error("failed to handle event")
 			return
 		}
+		// return 202 accepted once the event is on the queue
+		w.WriteHeader(http.StatusAccepted)
 	}), "webhook-receiver"))
 
 	logrus.WithField("listener", s.config.HttpListener).Info("Starting server")
-	logrus.Fatal(http.ListenAndServe(s.config.HttpListener, nil))
+	loggingMiddleware := http_logrus.Middleware(
+		logrus.WithFields(logrus.Fields{}),
+	)(mux)
+	logrus.Fatal(http.ListenAndServe(s.config.HttpListener, loggingMiddleware))
 }
 
 // WithEventChannel sets the event channel for the server

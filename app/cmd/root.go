@@ -27,11 +27,18 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// check logging early so we can use it from here on out
-		verboseMode := cmd.Flag("verbose").Value.String() == "true"
+		logrus.SetLevel(logrus.WarnLevel)
+		verboseMode, err := cmd.Flags().GetBool("verbose")
+		if err != nil {
+			logrus.WithError(err).Fatal("failed to get verbose flag")
+		}
 		if verboseMode {
 			logrus.SetLevel(logrus.InfoLevel)
 		}
-		debugMode := cmd.Flag("debug").Value.String() == "true"
+		debugMode, err := cmd.Flags().GetBool("debug")
+		if err != nil {
+			logrus.WithError(err).Fatal("failed to get debug flag")
+		}
 		if debugMode {
 			logrus.SetLevel(logrus.DebugLevel)
 			logrus.Debug("Debug mode enabled")

@@ -14,7 +14,7 @@ func Test_NewAppFailWhenNoDatabase(t *testing.T) {
 		EnableTracing: false,
 		TracingTarget: ""}, nil)
 	if err == nil {
-		t.Errorf("error: %v", err)
+		t.Error("expected error, got nil")
 	}
 }
 func Test_NewApp(t *testing.T) {

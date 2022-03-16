@@ -50,7 +50,7 @@ helm repo add adfinis https://charts.adfinis.com
 helm install adfinis/mopsos
 ```
 
-Please refer to the [`mopsos` Helm chart](https://github.com/adfinis-sygroup/helm-charts/tree/master/charts/back8sup)
+Please refer to the [`mopsos` Helm chart](https://github.com/adfinis-sygroup/helm-charts/tree/master/charts/mopsos)
 for further information.
 
 ### Telemetry

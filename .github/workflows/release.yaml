@@ -4,7 +4,7 @@ name: Release App
 on:
   release:
     types:
-      - created
+      - published
 
 jobs:
   goreleaser:

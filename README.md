@@ -5,6 +5,36 @@ Receives [CloudEvents](https://cloudevents.io/) from [Argo CD](https://argoproj.
 Mopsos knows the version of the applications installed in your cluster and helps you see
 what you need to update.
 
+
+```mermaid
+journey
+    title multi cluster management without Mopsos
+    section Plan
+      Start work: 5
+      Analyse requirement: 4
+      Where are affected apps installed: 1
+    section Build
+      Install apps: 5
+      Document installed versions: 1
+    section Run
+      Prepare change for rollout: 4
+      Find clusters affected by change: 1
+```
+```mermaid
+journey
+    title with Mopsos
+    section Plan
+      Start work: 5
+      Analyse requirement: 4
+      Mopsos: 5
+    section Build
+      Install apps: 4
+      Mopsos: 5
+    section Run
+      Prepare change for rollout: 4
+      Mopsos: 5
+```
+
 ## Architecture
 
 ### Information Flow

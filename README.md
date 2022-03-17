@@ -156,6 +156,11 @@ it during the squash and merge operation on the PR.
 The CI/CD setup uses the [Goreleaser](https://goreleaser.com/) to publish binaries and container images.
 This is managed in [.github/workflows/release.yaml](./.github/workflows/release.yaml).
 
+## Code of Conduct
+
+This repository has a [code of conduct](CODE_OF_CONDUCT.md), we will
+remove things that do not respect it.
+
 ## About this repository
 
 Adfinis fights for a software world that is more open, where the quality is

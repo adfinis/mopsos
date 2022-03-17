@@ -28,6 +28,8 @@ jobs:
 
       - name: Run GolangCI-Lint
         uses: golangci/golangci-lint-action@v3
+        with:
+          args: --timeout 3m
 
   test:
     runs-on: ubuntu-latest

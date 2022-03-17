@@ -7,6 +7,7 @@ import (
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 
 	"github.com/adfinis-sygroup/mopsos/app/models"
 )
@@ -56,7 +57,17 @@ func (h *Handler) HandleEvent(event cloudevents.Event) error {
 
 	log.WithField("record", record).Debug("creating record")
 
-	h.database.WithContext(ctx).Create(record)
+	h.database.WithContext(ctx).Clauses(
+		clause.OnConflict{
+			Columns: []clause.Column{
+				{Name: "cluster_name"},
+				{Name: "instance_id"},
+				{Name: "application_name"},
+				{Name: "application_instance"},
+			},
+			UpdateAll: true,
+		},
+	).Create(record)
 
 	return nil
 }

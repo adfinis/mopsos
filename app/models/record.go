@@ -20,9 +20,9 @@ type Record struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 
 	// actual payload of record
-	ClusterName         string `json:"cluster_name" gorm:"not null,index:idx_search"`
-	InstanceId          string `json:"instance_id"`
-	ApplicationName     string `json:"application_name" gorm:"not null,index:idx_search"`
-	ApplicationInstance string `json:"application_instance"`
-	ApplicationVersion  string `json:"application_version" gorm:"not null,index:idx_search"`
+	ClusterName         string `json:"cluster_name" gorm:"uniqueIndex:idx_unique"`
+	InstanceId          string `json:"instance_id" gorm:"uniqueIndex:idx_unique"`
+	ApplicationName     string `json:"application_name" gorm:"uniqueIndex:idx_unique"`
+	ApplicationInstance string `json:"application_instance" gorm:"uniqueIndex:idx_unique"`
+	ApplicationVersion  string `json:"application_version" gorm:"not null"`
 }

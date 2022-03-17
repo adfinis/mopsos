@@ -64,9 +64,23 @@ You can send telemetry data to an [OpenTelemetry Collector](https://opentelemetr
 
 ## Development
 
+### Requirements
+
+* [Go installation](https://go.dev/doc/install) (needs to be >=1.17, os package support may vary)
+* [Go extension for VS Code](https://marketplace.visualstudio.com/items?itemName=golang.go) (if you use VS Code)
+
+### Repo setup
+
+Clone the repository to your local machine:
+
+```bash
+git clone git@github.com:adfinis-sygroup/mopsos.git
+cd mopsos
+```
+
 ### Testing
 
-You can run the included unittest as follows.
+You can run the included unittests as follows.
 
 ```bash
 # run tests (./... recursivley scans the repo for _test.go files)
@@ -141,6 +155,11 @@ it during the squash and merge operation on the PR.
 
 The CI/CD setup uses the [Goreleaser](https://goreleaser.com/) to publish binaries and container images.
 This is managed in [.github/workflows/release.yaml](./.github/workflows/release.yaml).
+
+## Code of Conduct
+
+This repository has a [code of conduct](CODE_OF_CONDUCT.md), we will
+remove things that do not respect it.
 
 ## About this repository
 

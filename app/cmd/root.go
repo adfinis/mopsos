@@ -68,13 +68,30 @@ var rootCmd = &cobra.Command{
 			logrus.Fatal(err)
 		}
 
+		// read basic auth flags
+		basicAuthUsers := make(map[string]string)
+		authString, err := cmd.Flags().GetString("http-basic-auth-users")
+		if err != nil {
+			logrus.Fatal(err)
+		}
+		if authString != "" {
+			for _, user := range strings.Split(authString, ",") {
+				userParts := strings.Split(user, ":")
+				if len(userParts) != 2 {
+					logrus.Fatalf("invalid basic auth user: %s", user)
+				}
+				basicAuthUsers[userParts[0]] = userParts[1]
+			}
+		}
+
 		// build config struct
 		cfg := &mopsos.Config{
 			DBProvider: provider,
 			DBDSN:      dsn,
 			DBMigrate:  migrate,
 
-			HttpListener: listener,
+			HttpListener:   listener,
+			BasicAuthUsers: basicAuthUsers,
 
 			EnableTracing: enableTracing,
 			TracingTarget: tracingTarget,
@@ -113,6 +130,7 @@ func Execute() {
 
 	// webserver flags
 	rootCmd.Flags().String("http-listener", ":8080", "HTTP listener")
+	rootCmd.Flags().String("http-basic-auth-users", "", "Comma-separated list of clusters and tokens, e.g. 'cluster1:token1,cluster2:token2'")
 
 	// otel flags
 	rootCmd.Flags().Bool("otel", false, "Enable OpenTelemetry tracing")

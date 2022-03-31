@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/adfinis-sygroup/mopsos/app/models"
 	otelObs "github.com/cloudevents/sdk-go/observability/opentelemetry/v2/client"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	"github.com/cloudevents/sdk-go/v2/binding"
@@ -41,6 +42,18 @@ func (s *Server) Start() {
 	})
 	mux.Handle("/webhook", otelhttp.NewHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
+
+		// get basic auth credentials
+		username, password, ok := r.BasicAuth()
+		if !ok {
+			http.Error(w, "missing Authorization header", http.StatusUnauthorized)
+			return
+		}
+		if !s.checkAuth(username, password) {
+			http.Error(w, "invalid credentials", http.StatusUnauthorized)
+			return
+		}
+
 		// get event
 		message := httproto.NewMessageFromHttpRequest(r)
 		event, err := binding.ToEvent(context.TODO(), message)
@@ -48,6 +61,21 @@ func (s *Server) Start() {
 			logrus.WithError(err).Error("failed to decode event")
 			return
 		}
+
+		// TODO consider how to harmonise this with what the handler does later on
+		record := &models.Record{}
+		if err := event.DataAs(record); err != nil {
+			logrus.WithError(err).Errorf("failed to unmarshal event data")
+			http.Error(w, "failed to unmarshal event data", http.StatusInternalServerError)
+			return
+		}
+
+		// reject record that have not been sent from the right auth
+		if record.ClusterName != username {
+			http.Error(w, "event data does not match username", http.StatusUnauthorized)
+			return
+		}
+
 		err = s.HandleReceivedEvent(ctx, *event)
 		if err != nil {
 			logrus.WithError(err).Error("failed to handle event")
@@ -84,4 +112,12 @@ func (s *Server) HandleReceivedEvent(ctx context.Context, event cloudevents.Even
 	logrus.Debugf("received event: %v", event)
 
 	return nil
+}
+
+// checkAuth checks if the username and password are correct
+func (s *Server) checkAuth(username, password string) bool {
+	logrus.WithFields(logrus.Fields{
+		"username": username,
+	}).Debug("checking credentials")
+	return s.config.BasicAuthUsers[username] == password
 }

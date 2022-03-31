@@ -1,10 +1,10 @@
 package db
 
 import (
+	"github.com/glebarez/sqlite"
 	gorm_logrus "github.com/onrik/gorm-logrus"
 	"github.com/uptrace/opentelemetry-go-extra/otelgorm"
 	"gorm.io/driver/postgres"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
 	mopsos "github.com/adfinis-sygroup/mopsos/app"

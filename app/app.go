@@ -3,7 +3,7 @@ package app
 import (
 	"errors"
 
-	cloudevents "github.com/cloudevents/sdk-go/v2"
+	"github.com/adfinis-sygroup/mopsos/app/models"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -27,7 +27,7 @@ func NewApp(c *Config, db *gorm.DB) (*App, error) {
 
 func (a *App) Run() {
 	// eventChan is used to asynchronously pass events receiver from the Server to the Handler
-	eventChan := make(chan cloudevents.Event)
+	eventChan := make(chan models.EventData)
 
 	// handle events in background goroutine
 	go func() {

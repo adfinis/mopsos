@@ -3,8 +3,6 @@ package app
 import (
 	"context"
 
-	otelObs "github.com/cloudevents/sdk-go/observability/opentelemetry/v2/client"
-	cloudevents "github.com/cloudevents/sdk-go/v2"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -26,36 +24,24 @@ func NewHandler(enableTracing bool, db *gorm.DB) *Handler {
 }
 
 // HandleEvents blocks on the queue and handles events
-func (h *Handler) HandleEvents(eventChan chan cloudevents.Event) error {
+func (h *Handler) HandleEvents(eventChan chan models.EventData) error {
 	// block on the event channel while ranging over its contents
-	for event := range eventChan {
-		err := h.HandleEvent(event)
+	for data := range eventChan {
+		err := h.HandleEvent(data)
 		if err != nil {
-			logrus.WithField("event", event).WithError(err).Error("failed to handle event")
+			logrus.WithField("event", data.Event).WithError(err).Error("failed to handle event")
 		}
 	}
 	return nil
 }
 
-func (h *Handler) HandleEvent(event cloudevents.Event) error {
-	log := logrus.WithField("event", event)
+func (h *Handler) HandleEvent(data models.EventData) error {
+	log := logrus.WithField("event", data.Event)
 	log.Debug("received event")
 
 	ctx := context.Background()
 
-	if h.enableTracing {
-		ctx = otelObs.ExtractDistributedTracingExtension(ctx, event)
-	}
-
-	record := &models.Record{}
-
-	err := event.DataAs(record)
-	if err != nil {
-		log.WithError(err).Errorf("failed to unmarshal event data")
-		return err
-	}
-
-	log.WithField("record", record).Debug("creating record")
+	log.WithField("record", data.Record).Debug("creating record")
 
 	h.database.WithContext(ctx).Clauses(
 		clause.OnConflict{
@@ -67,7 +53,7 @@ func (h *Handler) HandleEvent(event cloudevents.Event) error {
 			},
 			UpdateAll: true,
 		},
-	).Create(record)
+	).Create(&data.Record)
 
 	return nil
 }

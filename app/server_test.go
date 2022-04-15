@@ -81,7 +81,59 @@ func Test_Authenticate(t *testing.T) {
 	auth := a.Server.Authenticate(handler)
 	auth.ServeHTTP(res, req)
 
+	if res.Result().StatusCode != http.StatusOK {
+		t.Errorf("status code should be 200")
+	}
 	if a.Server.AuthenticatedUser != "username" {
 		t.Errorf("username not set")
+	}
+}
+
+func Test_AuthenticateNoHeader(t *testing.T) {
+	a, _, _ := newApp()
+
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
+
+	req := httptest.NewRequest(http.MethodGet, "http://example.com", nil)
+
+	res := httptest.NewRecorder()
+
+	if a.Server.AuthenticatedUser != "" {
+		t.Errorf("authenticated user should be empty")
+	}
+
+	auth := a.Server.Authenticate(handler)
+	auth.ServeHTTP(res, req)
+
+	if res.Result().StatusCode != http.StatusUnauthorized {
+		t.Errorf("status code should be 401")
+	}
+	if a.Server.AuthenticatedUser != "" {
+		t.Errorf("authenticated user should be empty")
+	}
+}
+
+func Test_AuthenticateInvalidUser(t *testing.T) {
+	a, _, _ := newApp()
+
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
+
+	req := httptest.NewRequest(http.MethodGet, "http://example.com", nil)
+	req.SetBasicAuth("username", "invalid")
+
+	res := httptest.NewRecorder()
+
+	if a.Server.AuthenticatedUser != "" {
+		t.Errorf("authenticated user should be empty")
+	}
+
+	auth := a.Server.Authenticate(handler)
+	auth.ServeHTTP(res, req)
+
+	if res.Result().StatusCode != http.StatusUnauthorized {
+		t.Errorf("status code should be 401")
+	}
+	if a.Server.AuthenticatedUser != "" {
+		t.Errorf("authenticated user should be empty")
 	}
 }

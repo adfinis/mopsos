@@ -26,5 +26,3 @@ type Record struct {
 	ApplicationInstance string `json:"application_instance" gorm:"uniqueIndex:idx_unique"`
 	ApplicationVersion  string `json:"application_version" gorm:"not null"`
 }
-
-var ContextUsername string = "username"

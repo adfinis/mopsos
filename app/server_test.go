@@ -1,6 +1,7 @@
 package app_test
 
 import (
+	"bytes"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -135,5 +136,26 @@ func Test_AuthenticateInvalidUser(t *testing.T) {
 	}
 	if a.Server.AuthenticatedUser != "" {
 		t.Errorf("authenticated user should be empty")
+	}
+}
+
+func Test_LoadEvent(t *testing.T) {
+	a, _, _ := newApp()
+
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
+
+	body := []byte(`{"specversion":"1.0","type":"test"}`)
+	req := httptest.NewRequest(http.MethodPost, "http://example.com/webhook", bytes.NewReader(body))
+	req.Header.Add("Content-Type", "application/cloudevents+json")
+
+	res := httptest.NewRecorder()
+
+	load := a.Server.LoadEvent(handler)
+	load.ServeHTTP(res, req)
+
+	req.Body.Close()
+
+	if a.Server.ReceivedEvent.Type() != "test" {
+		t.Errorf("received event type should be test")
 	}
 }

@@ -123,7 +123,6 @@ func (s *Server) LoadEvent(next http.Handler) http.Handler {
 // Validate middleware handles checking received events for validity
 func (s *Server) Validate(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// TODO consider how to harmonise this with what the handler does later on
 		record := &models.Record{}
 		if err := s.ReceivedEvent.DataAs(record); err != nil {
 			logrus.WithError(err).Errorf("failed to unmarshal event data")

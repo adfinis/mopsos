@@ -31,31 +31,6 @@ func newApp() (*mopsos.App, *gorm.DB, chan models.EventData) {
 	return a, dbMock, eventChan
 }
 
-func Test_ServerHandleReceivedEvent(t *testing.T) {
-	a, _, eventChan := newApp()
-
-	mockEvent := cloudevents.NewEvent(
-		cloudevents.VersionV1,
-	)
-	a.Server.ReceivedEvent = mockEvent
-	a.Server.ReceivedRecord = &models.Record{}
-	mockEvent.SetType("test")
-	go func() {
-		err := a.Server.HandleReceivedEvent()
-		if err != nil {
-			t.Errorf("error: %v", err)
-		}
-	}()
-
-	for data := range eventChan {
-		i := data.Event
-		if i.Type() != "test" {
-			t.Errorf("error: %v", i.Type())
-		}
-		close(a.Server.EventChan)
-	}
-}
-
 func Test_ServerWithEventChannel(t *testing.T) {
 	a, _, eventChan := newApp()
 
@@ -68,16 +43,16 @@ func Test_ServerWithEventChannel(t *testing.T) {
 func Test_Authenticate(t *testing.T) {
 	a, _, _ := newApp()
 
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Context().Value(mopsos.ContextUsername) != "username" {
+			t.Error("username not set")
+		}
+	})
 
 	req := httptest.NewRequest(http.MethodGet, "http://example.com", nil)
 	req.SetBasicAuth("username", "password")
 
 	res := httptest.NewRecorder()
-
-	if a.Server.AuthenticatedUser != "" {
-		t.Errorf("authenticated user should be empty")
-	}
 
 	auth := a.Server.Authenticate(handler)
 	auth.ServeHTTP(res, req)
@@ -85,48 +60,39 @@ func Test_Authenticate(t *testing.T) {
 	if res.Result().StatusCode != http.StatusOK {
 		t.Errorf("status code should be 200")
 	}
-	if a.Server.AuthenticatedUser != "username" {
-		t.Errorf("username not set")
-	}
+
 }
 
 func Test_AuthenticateNoHeader(t *testing.T) {
 	a, _, _ := newApp()
 
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Error("handler should not be called")
+	})
 
 	req := httptest.NewRequest(http.MethodGet, "http://example.com", nil)
 
 	res := httptest.NewRecorder()
-
-	if a.Server.AuthenticatedUser != "" {
-		t.Errorf("authenticated user should be empty")
-	}
 
 	auth := a.Server.Authenticate(handler)
 	auth.ServeHTTP(res, req)
 
 	if res.Result().StatusCode != http.StatusUnauthorized {
 		t.Errorf("status code should be 401")
-	}
-	if a.Server.AuthenticatedUser != "" {
-		t.Errorf("authenticated user should be empty")
 	}
 }
 
 func Test_AuthenticateInvalidUser(t *testing.T) {
 	a, _, _ := newApp()
 
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Error("handler should not be called")
+	})
 
 	req := httptest.NewRequest(http.MethodGet, "http://example.com", nil)
 	req.SetBasicAuth("username", "invalid")
 
 	res := httptest.NewRecorder()
-
-	if a.Server.AuthenticatedUser != "" {
-		t.Errorf("authenticated user should be empty")
-	}
 
 	auth := a.Server.Authenticate(handler)
 	auth.ServeHTTP(res, req)
@@ -134,15 +100,17 @@ func Test_AuthenticateInvalidUser(t *testing.T) {
 	if res.Result().StatusCode != http.StatusUnauthorized {
 		t.Errorf("status code should be 401")
 	}
-	if a.Server.AuthenticatedUser != "" {
-		t.Errorf("authenticated user should be empty")
-	}
 }
 
 func Test_LoadEvent(t *testing.T) {
 	a, _, _ := newApp()
 
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		event := r.Context().Value(mopsos.ContextEvent).(*cloudevents.Event)
+		if event.Type() != "test" {
+			t.Errorf("event type should be test")
+		}
+	})
 
 	body := []byte(`{"specversion":"1.0","type":"test"}`)
 	req := httptest.NewRequest(http.MethodPost, "http://example.com/webhook", bytes.NewReader(body))
@@ -154,8 +122,21 @@ func Test_LoadEvent(t *testing.T) {
 	load.ServeHTTP(res, req)
 
 	req.Body.Close()
+}
 
-	if a.Server.ReceivedEvent.Type() != "test" {
-		t.Errorf("received event type should be test")
+func Test_HandleHealthCheck(t *testing.T) {
+	a, _, _ := newApp()
+
+	req := httptest.NewRequest(http.MethodGet, "http://example.com/health", nil)
+	res := httptest.NewRecorder()
+
+	a.Server.HandleHealthCheck(res, req)
+
+	if res.Result().StatusCode != http.StatusOK {
+		t.Errorf("status code should be 200")
+	}
+	expected := "{\"ok\":true}\n"
+	if res.Body.String() != expected {
+		t.Errorf("body should be %v got %s", expected, res.Body.String())
 	}
 }

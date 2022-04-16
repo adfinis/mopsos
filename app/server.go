@@ -132,7 +132,10 @@ func (s *Server) Validate(next http.Handler) http.Handler {
 
 func (s *Server) HandleHealthCheck(w http.ResponseWriter, r *http.Request) {
 	// an example API handler
-	json.NewEncoder(w).Encode(map[string]bool{"ok": true})
+	err := json.NewEncoder(w).Encode(map[string]bool{"ok": true})
+	if err != nil {
+		logrus.WithError(err).Error("error encoding response")
+	}
 }
 
 func (s *Server) HandleWebhook(w http.ResponseWriter, r *http.Request) {

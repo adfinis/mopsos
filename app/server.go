@@ -110,7 +110,7 @@ func (s *Server) LoadEvent(next http.Handler) http.Handler {
 // Validate middleware handles checking received events for validity
 func (s *Server) Validate(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		event := r.Context().Value(ContextEvent).(event.Event)
+		event := r.Context().Value(ContextEvent).(*event.Event)
 		record := &models.Record{}
 
 		if err := event.DataAs(record); err != nil {
@@ -140,12 +140,12 @@ func (s *Server) HandleHealthCheck(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) HandleWebhook(w http.ResponseWriter, r *http.Request) {
 	// get middleware data from context
-	event := r.Context().Value(ContextEvent).(event.Event)
+	event := r.Context().Value(ContextEvent).(*event.Event)
 	record := r.Context().Value(ContextRecord).(*models.Record)
 
 	// send the event to the main app via the async channel
 	s.EventChan <- models.EventData{
-		Event:  event,
+		Event:  *event,
 		Record: *record,
 	}
 	// return 202 accepted once the event is on the queue

@@ -1,5 +1,7 @@
 # Mopsos
 
+![Mopsos](docs/mopsos.png Mopsos)
+
 Receives [CloudEvents](https://cloudevents.io/) from [Argo CD](https://argoproj.github.io/cd/) [notifications](https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/) and stores them for later analysis.
 
 Mopsos knows the version of the applications installed in your cluster and helps you see

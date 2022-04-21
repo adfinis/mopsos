@@ -18,7 +18,7 @@ import (
 	"github.com/adfinis-sygroup/mopsos/app/models"
 )
 
-func eventStub(record *models.Record) cloudevents.Event {
+func eventStub(record *models.Record) models.EventData {
 	ctx := context.Background()
 
 	evt := cloudevents.NewEvent(cloudevents.VersionV1)
@@ -47,12 +47,15 @@ func eventStub(record *models.Record) cloudevents.Event {
 	fmt.Printf("%+v\n", ctx)
 	fmt.Printf("%+v\n", evt)
 
-	return evt
+	return models.EventData{
+		Event:  evt,
+		Record: *record,
+	}
 }
 
 func Test_Handler_HandleEvent(t *testing.T) {
 	type args struct {
-		event cloudevents.Event
+		eventData models.EventData
 	}
 	tests := []struct {
 		name    string
@@ -62,7 +65,7 @@ func Test_Handler_HandleEvent(t *testing.T) {
 		{
 			name: "simple event with minimal data",
 			args: args{
-				event: eventStub(
+				eventData: eventStub(
 					&models.Record{
 						ClusterName:        "test",
 						ApplicationName:    "test",
@@ -74,7 +77,7 @@ func Test_Handler_HandleEvent(t *testing.T) {
 		{
 			name: "event with complete data",
 			args: args{
-				event: eventStub(
+				eventData: eventStub(
 					&models.Record{
 						ClusterName:         "cluster-name",
 						InstanceId:          "cluster-instance",
@@ -88,7 +91,7 @@ func Test_Handler_HandleEvent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			evt := tt.args.event
+			evt := tt.args.eventData.Event
 			evtRecord := &models.Record{}
 			err := evt.DataAs(evtRecord)
 			if err != nil {
@@ -107,7 +110,7 @@ func Test_Handler_HandleEvent(t *testing.T) {
 
 			h := mopsos.NewHandler(true, gdb)
 
-			if err := h.HandleEvent(evt); (err != nil) != tt.wantErr {
+			if err := h.HandleEvent(tt.args.eventData); (err != nil) != tt.wantErr {
 				t.Errorf("Handler.HandleEvent() error = %v, wantErr %v", err, tt.wantErr)
 			}
 

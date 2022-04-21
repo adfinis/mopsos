@@ -1,6 +1,6 @@
 # Mopsos
 
-![Mopsos](docs/mopsos.png Mopsos)
+![Mopsos](./docs/mopsos.png)
 
 Receives [CloudEvents](https://cloudevents.io/) from [Argo CD](https://argoproj.github.io/cd/) [notifications](https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/) and stores them for later analysis.
 

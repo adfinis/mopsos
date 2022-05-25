@@ -3,7 +3,7 @@ module github.com/adfinis-sygroup/mopsos
 go 1.17
 
 require (
-	github.com/cloudevents/sdk-go/observability/opentelemetry/v2 v2.9.0
+	github.com/cloudevents/sdk-go/observability/opentelemetry/v2 v2.10.0
 	github.com/cloudevents/sdk-go/v2 v2.10.0
 	github.com/glebarez/sqlite v1.4.5
 	github.com/improbable-eng/go-httpwares v0.0.0-20200609095714-edc8019f93cc

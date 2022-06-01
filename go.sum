@@ -509,10 +509,10 @@ github.com/stretchr/testify v1.7.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/
 github.com/subosito/gotenv v1.3.0 h1:mjC+YW8QpAdXibNi+vNWgzmgBH4+5l5dCXv8cNysBLI=
 github.com/subosito/gotenv v1.3.0/go.mod h1:YzJjq/33h7nrwdY+iHMhEOEEbW0ovIz0tB6t6PwAXzs=
 github.com/tv42/httpunix v0.0.0-20150427012821-b75d8614f926/go.mod h1:9ESjWnEqriFuLhtthL60Sar/7RFoluCcXsuvEwTV5KM=
-github.com/uptrace/opentelemetry-go-extra/otelgorm v0.1.13 h1:662U+xGnRBjgCJZ7iAj7RbuTDjVHYdQm62L5vwSX3Po=
-github.com/uptrace/opentelemetry-go-extra/otelgorm v0.1.13/go.mod h1:tnL24opa7i/8WpwB3NKegg6s/hWKjNvl0ygetOKrCwk=
-github.com/uptrace/opentelemetry-go-extra/otelsql v0.1.13 h1:npI1PFN6M3qq9911n+4upBg3XPKrv7PzWm4KuMopT/0=
-github.com/uptrace/opentelemetry-go-extra/otelsql v0.1.13/go.mod h1:f+W43lfMyEHrPCvj79MiD5UaRYaXn0O6D9Ge1OPuJUY=
+github.com/uptrace/opentelemetry-go-extra/otelgorm v0.1.14 h1:2PvOW/5pcMAyQluJuaLsOjixx+K22mlQYSXWSldPmYQ=
+github.com/uptrace/opentelemetry-go-extra/otelgorm v0.1.14/go.mod h1:CGkIWRlrVOKfNnwovrFZTJrPYqvTI4Z34tzfwGMSouE=
+github.com/uptrace/opentelemetry-go-extra/otelsql v0.1.14 h1:S08PHzWVZAO19LSkrEF1ZCLypE8VbTYAXMdXgB7QTso=
+github.com/uptrace/opentelemetry-go-extra/otelsql v0.1.14/go.mod h1:f+W43lfMyEHrPCvj79MiD5UaRYaXn0O6D9Ge1OPuJUY=
 github.com/valyala/bytebufferpool v1.0.0 h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6KllzawFIhcdPw=
 github.com/valyala/bytebufferpool v1.0.0/go.mod h1:6bBcMArwyJ5K/AmCkWv1jt77kVWyCJ6HpOuEn7z0Csc=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

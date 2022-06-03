@@ -7,7 +7,7 @@ require (
 	github.com/cloudevents/sdk-go/v2 v2.10.0
 	github.com/glebarez/sqlite v1.4.5
 	github.com/improbable-eng/go-httpwares v0.0.0-20200609095714-edc8019f93cc
-	github.com/onrik/gorm-logrus v0.3.0
+	github.com/onrik/gorm-logrus v0.4.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/pflag v1.0.5

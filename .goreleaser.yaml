@@ -23,10 +23,10 @@ changelog:
     - '^test:'
 dockers:
   - image_templates:
-      - "ghcr.io/adfinis-sygroup/mopsos:{{ .Tag }}"
-      - "ghcr.io/adfinis-sygroup/mopsos:v{{ .Major }}"
-      - "ghcr.io/adfinis-sygroup/mopsos:v{{ .Major }}.{{ .Minor }}"
-      - "ghcr.io/adfinis-sygroup/mopsos:latest"
+      - "ghcr.io/adfinis/mopsos:{{ .Tag }}"
+      - "ghcr.io/adfinis/mopsos:v{{ .Major }}"
+      - "ghcr.io/adfinis/mopsos:v{{ .Major }}.{{ .Minor }}"
+      - "ghcr.io/adfinis/mopsos:latest"
     build_flag_templates:
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.name={{.ProjectName}}"

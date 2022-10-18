@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/cloudevents/sdk-go/observability/opentelemetry/v2 v2.10.1
 	github.com/cloudevents/sdk-go/v2 v2.11.0
-	github.com/glebarez/sqlite v1.4.7
+	github.com/glebarez/sqlite v1.5.0
 	github.com/improbable-eng/go-httpwares v0.0.0-20200609095714-edc8019f93cc
 	github.com/onrik/gorm-logrus v0.4.0
 	github.com/sirupsen/logrus v1.9.0
@@ -19,7 +19,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.8.0
 	google.golang.org/grpc v1.49.0
 	gorm.io/driver/postgres v1.3.8
-	gorm.io/gorm v1.23.8
+	gorm.io/gorm v1.24.0
 )
 
 require (
@@ -27,7 +27,7 @@ require (
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
-	github.com/glebarez/go-sqlite v1.18.2 // indirect
+	github.com/glebarez/go-sqlite v1.19.1 // indirect
 	github.com/go-chi/chi v1.5.4 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -79,8 +79,8 @@ require (
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	modernc.org/libc v1.18.0 // indirect
+	modernc.org/libc v1.19.0 // indirect
 	modernc.org/mathutil v1.5.0 // indirect
-	modernc.org/memory v1.3.0 // indirect
-	modernc.org/sqlite v1.18.2 // indirect
+	modernc.org/memory v1.4.0 // indirect
+	modernc.org/sqlite v1.19.1 // indirect
 )

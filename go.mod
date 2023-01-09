@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/cloudevents/sdk-go/observability/opentelemetry/v2 v2.10.1
-	github.com/cloudevents/sdk-go/v2 v2.11.0
+	github.com/cloudevents/sdk-go/v2 v2.13.0
 	github.com/glebarez/sqlite v1.5.0
 	github.com/improbable-eng/go-httpwares v0.0.0-20200609095714-edc8019f93cc
 	github.com/onrik/gorm-logrus v0.4.0
